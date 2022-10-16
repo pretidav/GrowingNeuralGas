@@ -1,10 +1,5 @@
-# GrowingNeuralGas
-Growing Neural Gas algorithm from "A Growing Neural Gas Network Learns Topoligies" by Fritzke B. 
-
-Example usage: 
-~~~
 from GNG.neuralgas import GraphNeuralGas
-from example.distributions import Box, Circle, TiltedCircle, HypPar  #this is mimiking some data 
+from example.distributions import Box, Circle, TiltedCircle, HypPar
 
 NG = GraphNeuralGas(
     distribution=HypPar(n=800),
@@ -22,4 +17,3 @@ NG = GraphNeuralGas(
     error_tolerance=1,
 )
 NG.evolve(steps=100000)
-~~~
