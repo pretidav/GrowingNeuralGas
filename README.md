@@ -23,3 +23,16 @@ NG = GraphNeuralGas(
 )
 NG.evolve(steps=100000)
 ~~~
+Examples
+
+Circle
+![My Image](example/Circle/epoch_500.png)
+![My Image](example/Circle/epoch_13000.png)
+
+TwistedCircle3d
+![My Image](example/TiltedCircle/epoch_500.png)
+![My Image](example/TiltedCircle/epoch_19000.png)
+
+Surface3d
+![My Image](example/HypPar3d/epoch_500.png)
+![My Image](example/HypPar3d/epoch_27500.png)
