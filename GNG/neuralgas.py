@@ -161,6 +161,10 @@ class GraphNeuralGas:
                 plt.title("epoch: {} n: {} error/dim/units: {}".format(n, tot_units, round(tot_error,4)))
                 plt.savefig(self.figpath+'/epoch_'+str(n)+'.png')
                 plt.clf() 
+
+                self.get_cluster()
+                self.plot_cluster(n=n)
+
             if (
                 (tot_units >= self.max_number)
                 or (tot_error <= self.error_tolerance)
@@ -168,3 +172,20 @@ class GraphNeuralGas:
             ):
                 print("n: {} error: {}".format(n, tot_error))
                 break
+    
+    def get_cluster(self):
+        self.adjacency = np.array(self.gng.get_adjacency().data)
+        self.laplacian = np.diag(np.sum(self.adjacency,axis=1))-self.adjacency
+        vals, vecs = np.linalg.eig(self.laplacian)
+
+        vecs = vecs[:,np.argsort(vals)]
+        self.clusters = np.where(vecs[:,1] > 0,0,1)
+        
+    def plot_cluster(self,n=0):
+        ax = self.plot()
+        color_map = {1:'orange',0:'black'} 
+        for i,k in enumerate(self.gng.vs):
+            ax.scatter(*np.array(k["weight"]), color = color_map[self.clusters[i]])
+        plt.savefig(self.figpath+'/cluster_'+str(n)+'.png')
+        plt.clf() 
+    
