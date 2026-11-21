@@ -1,102 +1,69 @@
-import numpy as np
 import math
+
 import matplotlib.pyplot as plt
+import numpy as np
 
-class Box(): 
-  def __init__(self,dims,n=200): 
-    self.dims = dims 
-    self.d = len(dims)
-    self.v = []
-    self.n = n
-    for d in self.dims:
-      self.v.append(np.random.uniform(low=0.0,high=d,size=self.n))
-    self.v = np.array(self.v)
+from GNG.style import new_figure, scatter_cloud
 
-  def sample(self): 
-    i = np.random.randint(low=0,high=self.n-1)
-    return self.v[:,i]
 
-  def plot(self,n=200): 
-    if self.d==3: 
-      ax = plt.axes(projection ="3d");
-    else : 
-      ax = plt.axes()
-    ax.scatter(*self.v, color = "blue", alpha=0.05);
-    return ax 
+class Distribution:
+    """A finite point cloud ``v`` (one row per coordinate) that is sampled uniformly."""
 
-class Circle(): 
-  def __init__(self,n=2,d=2): 
-    self.n = n
-    self.d = d
-    self.v = []
-    r = np.random.uniform(0,2*math.pi,self.n)
-    self.v = np.array([np.cos(r),np.sin(r)])
+    d = 2  # dimension of the plot
 
-  def sample(self): 
-    i = np.random.randint(low=0,high=self.n)
-    return self.v[:,i]
+    def sample(self):
+        i = np.random.randint(low=0, high=self.n)
+        return self.v[:, i]
 
-  def plot(self): 
-    if self.d==3:
-      ax = plt.axes(projection ="3d");
-    else : 
-      ax = plt.axes()
-    ax.scatter(*self.v, color = "blue",alpha=0.02);
-    return ax 
+    def plot(self, ax=None):
+        if ax is None:
+            _, ax = new_figure(self.d)
+        scatter_cloud(ax, self.v)
+        return ax
 
-class TiltedCircle(): 
-  def __init__(self,n=200): 
-    self.n = n
-    self.v = []
-    r = np.random.uniform(0,2*math.pi,self.n)
-    self.v = np.array([np.cos(r),np.sin(r),np.cos(3*r)])
 
-  def sample(self): 
-    i = np.random.randint(low=0,high=self.n)
-    return self.v[:,i]
+class Box(Distribution):
+    def __init__(self, dims, n=200):
+        self.dims = dims
+        self.d = len(dims)
+        self.n = n
+        self.v = np.array([np.random.uniform(low=0.0, high=d, size=n) for d in dims])
 
-  def plot(self): 
-    ax = plt.axes(projection ="3d");
-    ax.scatter(*self.v, color = "blue", alpha=0.02);
-    return ax 
 
-class HypPar(): 
-  def __init__(self,n=200): 
-    self.n = n
-    self.v = []
-    x,y = np.random.uniform(3,13,n),np.random.uniform(3,13,n)
-    self.v = np.array([x,y,x*x+y*y])
+class Circle(Distribution):
+    def __init__(self, n=2, d=2):
+        self.n = n
+        self.d = d
+        r = np.random.uniform(0, 2 * math.pi, n)
+        self.v = np.array([np.cos(r), np.sin(r)])
 
-  def sample(self): 
-    i = np.random.randint(low=0,high=self.n)
-    return self.v[:,i]
 
-  def plot(self): 
-    ax = plt.axes(projection ="3d");
-    ax.scatter(*self.v, color = "blue",alpha=0.07);
-    return ax 
+class TiltedCircle(Distribution):
+    d = 3
 
-if __name__=='__main__': 
-  C = Circle(n=1000,d=2)
-  C.plot()
-  plt.show()
+    def __init__(self, n=200):
+        self.n = n
+        r = np.random.uniform(0, 2 * math.pi, n)
+        self.v = np.array([np.cos(r), np.sin(r), np.cos(3 * r)])
 
-  C = Circle(n=1000,d=3)
-  C.plot()
-  plt.show()
 
-  C = TiltedCircle(n=1000)
-  C.plot()
-  plt.show()
+class HypPar(Distribution):
+    d = 3
 
-  C = Box(dims=[10,5])
-  C.plot() 
-  plt.show() 
+    def __init__(self, n=200):
+        self.n = n
+        x, y = np.random.uniform(3, 13, n), np.random.uniform(3, 13, n)
+        self.v = np.array([x, y, x * x + y * y])
 
-  C = Box(dims=[10,5,2])
-  C.plot() 
-  plt.show() 
 
-  C = HypPar(n=1000)
-  C.plot()
-  plt.show()
+if __name__ == "__main__":
+    for C in (
+        Circle(n=1000, d=2),
+        Circle(n=1000, d=3),
+        TiltedCircle(n=1000),
+        Box(dims=[10, 5]),
+        Box(dims=[10, 5, 2]),
+        HypPar(n=1000),
+    ):
+        C.plot()
+        plt.show()

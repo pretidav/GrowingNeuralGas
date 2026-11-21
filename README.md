@@ -36,3 +36,14 @@ TwistedCircle3d
 Surface3d
 ![My Image](example/HypPar3d/epoch_500.png)
 ![My Image](example/HypPar3d/epoch_27500.png)
+
+## Notes
+The code follows the algorithm of the paper step by step (see the docstring of `GraphNeuralGas`).
+Parameter names: `growing_rate` = λ, `eps_b`, `eps_n`, `alpha`, `a_max`, `beta` = d.
+
+- `error_tolerance` is compared with `quantization_error()`, an estimate of the mean squared quantization error
+  per dimension, in the units of the data. It is `(1-beta)/beta * sum(E_c) / gas_d`.
+- The data are a finite point cloud that is resampled. If the units get denser than the points, some neighbouring
+  units are never the two closest ones to any point and their edge dies (a ring can end up cut in arcs). Use enough points.
+- Plots are drawn in the style of the blog (`GNG/style.py`). The font is Space Mono, with a monospace fallback.
+- To regenerate all the pictures of `example/`: `python -m example.generate` (or `python -m example.generate Circle Box2d`).
